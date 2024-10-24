@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista Prodotti</title>
+<!--  metto gli stili di Materialize -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- Collegamento al file CSS personalizzato   <link rel="stylesheet" href="/css/style.css"> -->
+
+</head>
+<body>
+
+	<div class="container">
+
+		<h1>Lista dei Prodotti Selezionati</h1>
+		<!-- Abbiamo creato un form che risponde all rotta /process con il metodo POST  -->
+		<form action="/process" method="POST">
+			<table>
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Marca</th>
+
+						<th>Immagine</th>
+						<th>Seleziona</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="prodotto : ${lista}">
+						<td th:text="${prodotto.nome}"></td>
+						<td th:text="${prodotto.marca}"></td>
+						<td><img th:src="${prodotto.url}" alt="Immagine Prodotto" style="object-fit: cover; height: 100px;"></td>
+						<td>
+							<!-- setto valore minimo a zero per la quantita di prodotti metto MIN=0 per evitare di mettere valori negativi   -->
+							<input type="number" name="num" value="0" min="0"> <input
+							type="hidden" name="nome" th:value="${prodotto.nome}">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<input type="submit" value="Aggiongi al carrello">
+		</form>
+
+		<!-- //andando a stampare i prodotti selezionati prendo la lista prodottiSelezionati -->
+		<h3>Prodotti Selezionati:</h3>
+		<!-- https://docs.google.com/presentation/d/1Cvx3gtFTTJa1yMXF_m3PoUEWqpgsCvFGuMJkWYP1tPw/edit#slide=id.g2c933dab703_0_54 slide 19 per th:if  -->
+		<div class="row" th:if="${prodottiSelezionati != null}">
+
+
+			<div class="col l4" th:each="prodotto : ${prodottiSelezionati}">
+			
+			
+					<div class="card">
+					<div class="card-image waves-effect waves-block waves-light">
+						<img class="activator" th:src="${prodotto.url}"
+							alt="Immagine Prodotto" style="object-fit: cover; height: 200px;">
+					</div>
+					<div class="card-content">
+						<span class="card-title activator grey-text text-darken-4"
+							th:text="${prodotto.nome}"><i class="material-icons right">more_vert</i></span>
+
+					</div>
+					<div class="card-reveal">
+						<span class="card-title grey-text text-darken-4"
+							th:text="${prodotto.marca}">Marca<i
+							class="material-icons right">close</i></span>
+						<p>
+							Prezzo: <span th:text="${prodotto.prezzo} + ' €'"></span>
+						</p>
+						<p>
+							Prezzo: <span th:text="${prodotto.descrizione} + ' €'"></span>
+						</p>
+					</div>
+				</div>
+				
+				
+				
+			</div>
+		</div>
+		<hr>
+
+		<h3>Catalogo </h3>
+
+		<div class="row">
+			<!--  class="col s12 m6 l4"  per tener conto degli schermi piu piccoli  l4 vuol dire che ne stampa 3  poiche le colonne sono 12-->
+			<div class="col  l4" th:each="prodotto : ${lista}">
+				<div class="card">
+					<div class="card-image waves-effect waves-block waves-light">
+						<img class="activator" th:src="${prodotto.url}"
+							alt="Immagine Prodotto" style="object-fit: cover; height: 200px;">
+					</div>
+					<div class="card-content">
+						<span class="card-title activator grey-text text-darken-4"
+							th:text="${prodotto.nome}"><i class="material-icons right">more_vert</i></span>
+
+					</div>
+					<div class="card-reveal">
+						<span class="card-title grey-text text-darken-4"
+							th:text="${prodotto.marca}">Marca<i
+							class="material-icons right">close</i></span>
+						<p>
+							Prezzo: <span th:text="${prodotto.prezzo} + ' €'"></span>
+						</p>
+						<p>
+							Descrizione: <span th:text="${prodotto.descrizione} + ' €'"></span>
+						</p>
+					</div>
+				</div>
+
+
+			</div>
+
+
+		</div>
+		<form action="/" method="GET">
+			<input type="submit" value="ritorna home">
+		</form>
+	</div>
+
+
+</body>
+
+<script>
+
+
+window.onload = gestoreLoad;
+
+function gestoreLoad(){
+ 
+ 
+	// la funzione location reload ci permette di avere un refresh automatico della pagina
+	// anche quando l'utente utilizza le frecce del browser
+	window.addEventListener('pageshow', function(event) {
+	            if (event.persisted) {
+	                location.reload();
+	            }
+	        });
+ 
+}
+</script>
+<!-- jQuery e Materialize JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.card-reveal');
+    var instances = M.AutoInit(); 
+  });
+</script>
+</html>
+
+
+<!-- <div class="card">
+    <div class="card-image waves-effect waves-block waves-light">
+      <img class="activator" src="images/office.jpg">
+    </div>
+    <div class="card-content">
+      <span class="card-title activator grey-text text-darken-4">Card Title<i class="material-icons right">more_vert</i></span>
+      
+    </div>
+    <div class="card-reveal">
+      <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+      <p>Here is some more information about this product that is only revealed once clicked on.</p>
+    </div>
+  </div> -->
